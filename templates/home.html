@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="wrapper">
+  <!--   Creative Tim Branding   -->
+  <a href="/">
+    <div class="logo-container">
+      <div class="logo">
+        <img src=" {% static 'img/new_logo.png' %} ">
+      </div>
+      <div class="brand">
+        G N Brothers
+      </div>
+    </div>
+  </a>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        
+        <div class="fresh-table toolbar-color-orange">
+        <!--
+          Available colors for the full background: full-color-blue, full-color-azure, full-color-green, full-color-red, full-color-orange
+          Available colors only for the toolbar: toolbar-color-blue, toolbar-color-azure, toolbar-color-green, toolbar-color-red, toolbar-color-orange
+        -->
+          <div class="toolbar">
+            <!-- <button id="alertBtn" class="btn btn-default">Alert</button> -->
+            <a class="btn btn-default" href="/admin">Admin</a>
+          </div>
+          <table id="fresh-table" class="table">
+            <thead>
+              <th data-field="id">ID</th>
+              <th data-field="name" data-sortable="true">Name</th>
+              <th data-field="Price" data-sortable="true">Price</th>
+              <th data-field="Stocks" data-sortable="true">Stocks</th>
+              <th data-field="Add">Add</th>
+              <th data-field="Delete">Delete</th>
+            </thead>
+            <tbody>
+              {% for product in products %}
+              <tr>
+                <td>{{product.id}}</td>
+                <td>{{product.name}}</td>
+                <td>Rs.{{product.price}}</td>
+                <td>{{product.quantity}}cs</td>
+                <td>
+                  
+                <form action="{% url 'warehouse:add_quantity' product.id %}" method="POST">
+            {% csrf_token %}
+            <input type="number" name="quantity" min="1" max="100">
+            <input class="btn btn-success" type="submit" value="Add">
+            </form>
+              </td>
+                <td>
+              <form method="POST" action="{% url 'warehouse:delete_quantity' product.id %}">
+              {% csrf_token %}
+              <input type="number" name="quantity" min="1" max="100">
+              <input type="submit" value="Delete" class="btn btn-success">
+              </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="fixed-plugin" style="top: 300px">
+  <div class="dropdown open">
+    <a href="#" data-toggle="dropdown">
+    <i class="fa fa-cog fa-2x"> </i>
+    </a>
+    <ul class="dropdown-menu">
+      <li class="header-title">Adjustments</li>
+      <li class="adjustments-line">
+        <a href="javascript:void(0)" class="switch-trigger">
+          <p>Full Background</p>
+          <div class="switch"
+            data-on-label="ON"
+            data-off-label="OFF">
+            <input type="checkbox" checked data-target="section-header" data-type="parallax"/>
+          </div>
+          <div class="clearfix"></div>
+        </a>
+      </li>
+      <li class="adjustments-line">
+        <a href="javascript:void(0)" class="switch-trigger">
+          <p>Colors</p>
+          <div class="pull-right">
+            <span class="badge filter badge-blue" data-color="blue"></span>
+            <span class="badge filter badge-azure" data-color="azure"></span>
+            <span class="badge filter badge-green" data-color="green"></span>
+            <span class="badge filter badge-orange active" data-color="orange"></span>
+            <span class="badge filter badge-red" data-color="red"></span>
+          </div>
+          <div class="clearfix"></div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock content %}
+
+{% block javascript %}
+
+  <script type="text/javascript">
+    var $table = $('#fresh-table')
+    var $alertBtn = $('#alertBtn')
+
+    $(function () {
+      $table.bootstrapTable({
+        classes: 'table table-hover table-striped',
+        toolbar: '.toolbar',
+
+        search: true,
+        showRefresh: true,
+        showToggle: true,
+        showColumns: true,
+        pagination: true,
+        striped: true,
+        sortable: true,
+        pageSize: 8,
+        pageList: [8, 10, 25, 50, 100],
+
+        formatShowingRows: function (pageFrom, pageTo, totalRows) {
+          return ''
+        },
+        formatRecordsPerPage: function (pageNumber) {
+          return pageNumber + ' rows visible'
+        }
+      })
+
+      $alertBtn.click(function () {
+        alert('You pressed on Alert')
+      })
+    })
+  </script>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga')
+
+    ga('create', 'UA-46172202-1', 'auto')
+    ga('send', 'pageview')
+
+  </script>
+{% endblock javascript %}
