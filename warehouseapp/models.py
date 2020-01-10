@@ -5,7 +5,7 @@ import uuid
 class Product(models.Model):
 	name = models.CharField(max_length=250)
 	price = models.IntegerField()
-	quantity = models.IntegerField()
+	quantity = models.IntegerField(blank=True, null=True)
 
 	def __str__(self):
 		return self.name

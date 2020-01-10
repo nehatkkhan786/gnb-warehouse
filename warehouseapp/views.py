@@ -38,6 +38,7 @@ def delete_quantity(request, pk):
 	if request.method == 'POST':
 		product = get_object_or_404(Product,pk=pk)
 		quantity = request.POST.get('quantity')
+		print (quantity)
 		int_quantity = int(quantity)
 		product.quantity -=int_quantity
 		product.save()
@@ -51,3 +52,16 @@ def delete_quantity(request, pk):
 			'quantity':updated_quantity
 		}
 		return JsonResponse(data)
+
+def demo(request):
+	return render(request, 'demo.html')
+
+
+def add_product(request):
+	if request.method == 'POST':
+		name = request.POST.get('product_name')
+		price = request.POST.get('price')
+		add_product = Product.objects.create(name = name , price = price, quantity=0)
+		return redirect('/')
+	else:
+		return render (request, '/')
