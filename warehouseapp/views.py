@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .models import Product, Transaction
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.http import JsonResponse
+from django.core import serializers
 
 # Create your views here.
 def homepage(request):
@@ -24,7 +26,13 @@ def add_quantity(request,pk):
 				product = product
 		)
 		new_transaction.save()
-		return redirect('/')
+		updated_quantity = product.quantity
+		
+		data = {
+			'quantity':updated_quantity
+		}
+		
+		return JsonResponse(data) 
 
 def delete_quantity(request, pk):
 	if request.method == 'POST':
@@ -38,4 +46,8 @@ def delete_quantity(request, pk):
 			operation = 2,
 			product = product
 			)
-		return redirect('/')
+		updated_quantity = product.quantity
+		data = {
+			'quantity':updated_quantity
+		}
+		return JsonResponse(data)

@@ -43,19 +43,19 @@
                 <td>{{product.id}}</td>
                 <td>{{product.name}}</td>
                 <td>Rs.{{product.price}}</td>
-                <td>{{product.quantity}}cs</td>
+                <td id="product_quantity">{{product.quantity}}cs</td>
                 <td>
                   
-                <form action="{% url 'warehouse:add_quantity' product.id %}" method="POST">
+            <form action="{% url 'warehouse:add_quantity' product.id %}" method="POST" id="form_add">
             {% csrf_token %}
-            <input type="number" name="quantity" min="1" max="100">
+            <input type="number" name="quantity" id="quantity" min="1" max="100">
             <input class="btn btn-success" type="submit" value="Add">
             </form>
               </td>
                 <td>
-              <form method="POST" action="{% url 'warehouse:delete_quantity' product.id %}">
+              <form  action="{% url 'warehouse:delete_quantity' product.id %}" method="POST" id="form_delete">
               {% csrf_token %}
-              <input type="number" name="quantity" min="1" max="100">
+              <input type="number" name="quantity2" id="delete_quantity" min="1" max="100">
               <input type="submit" value="Delete" class="btn btn-success">
               </form>
                 </td>
@@ -110,6 +110,51 @@
 
 {% block javascript %}
 
+
+<script type="text/javascript">
+
+$(document).on('submit', '#form_add', function(e){
+  e.preventDefault();
+  $.ajax({
+    type:'POST',
+    url :$(this).attr('action'), 
+    data : {
+      quantity:$('#quantity').val(),
+      csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+      action:'post',
+
+    },
+    success: function(data){
+      $('#quantity').val('');
+      console.log(data.quantity)
+      // $('#product_quantity').val(data.quantity)
+       $('#product_quantity').text(data.quantity);
+    } 
+
+  });
+});
+
+$(document).on('submit', '#form_delete', function(e){
+      e.preventDefault();
+      $.ajax({
+        type:'POST',
+        url: $(this).attr('action'),
+        data : {
+          quantity:$('#quantity2').val(),
+          csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+          action:'post',
+
+        },
+        success: function(data){
+          $('#quantity').val('');
+          console.log(data.quantity);
+        }
+      });    
+  });
+</script>
+
+
+
   <script type="text/javascript">
     var $table = $('#fresh-table')
     var $alertBtn = $('#alertBtn')
@@ -140,7 +185,7 @@
       $alertBtn.click(function () {
         alert('You pressed on Alert')
       })
-    })
+    });
   </script>
 
   <script>
@@ -150,7 +195,7 @@
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga')
 
     ga('create', 'UA-46172202-1', 'auto')
-    ga('send', 'pageview')
+    ga('send', 'pageview');
 
   </script>
 {% endblock javascript %}
