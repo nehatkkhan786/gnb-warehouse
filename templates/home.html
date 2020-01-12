@@ -86,16 +86,16 @@
                 <td id="product_quantity">{{product.quantity}}cs</td>
                 <td>
                   
-            <form action="{% url 'warehouse:add_quantity' product.id %}" method="POST" id="form_add">
+            <form action="{% url 'warehouse:add_quantity' product.id %}" method="POST" id="form_add{{product.id}}">
             {% csrf_token %}
-            <input type="number" name="quantity" id="quantity" min="1" max="100">
+            <input type="number" name="quantity" id="quantity{{product.id}}" min="1" max="100">
             <input class="btn btn-success" type="submit" value="Add">
             </form>
               </td>
                 <td>
-              <form  action="{% url 'warehouse:delete_quantity' product.id %}" method="POST" id="form_delete">
+              <form  action="{% url 'warehouse:delete_quantity' product.id %}" method="POST" id="form_delete{{product.id}}">
               {% csrf_token %}
-              <input type="number" name="quantity" id="delete_quantity" min="1" max="100">
+              <input type="number" name="quantity" id="delete_quantity{{product.id}}" min="1" max="100">
               <input type="submit" value="Delete" class="btn btn-success">
               </form>
                 </td>
@@ -153,19 +153,19 @@
 
 <script type="text/javascript">
 
-$(document).on('submit', '#form_add', function(e){
+$(document).on('submit', '#form_add{{product.id}}', function(e){
   e.preventDefault();
   $.ajax({
     type:'POST',
     url :$(this).attr('action'), 
     data : {
-      quantity:$('#quantity').val(),
+      quantity:$('#quantity{{product.id}}').val(),
       csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
       action:'post',
 
     },
     success: function(data){
-      $('#quantity').val('');
+      $('#quantity{{product.id}}').val('');
       console.log(data.quantity)
       // $('#product_quantity').val(data.quantity)
        $('#product_quantity').text(data.quantity);
@@ -174,19 +174,20 @@ $(document).on('submit', '#form_add', function(e){
   });
 });
 
-$(document).on('submit', '#form_delete', function(e){
+$(document).on('submit', '#form_delete{{product.id}}', function(e){
       e.preventDefault();
       $.ajax({
         type:'POST',
         url: $(this).attr('action'),
         data : {
-          quantity:$('#delete_quantity').val(),
+          quantity:$('#delete_quantity{{product.id}}').val(),
+          //quantity:$(this).querySelector('#delete_quantity').val(),
           csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
           action:'post',
 
         },
         success: function(data){
-          $('#delete_quantity').val('');
+          $('#delete_quantity{{product.id}}').val('');
           console.log(data.quantity);
           $('#product_quantity').text(data.quantity);
         }

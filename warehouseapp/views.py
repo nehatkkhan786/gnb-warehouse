@@ -3,7 +3,7 @@ from .models import Product, Transaction
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.http import JsonResponse
-from django.core import serializers
+
 
 # Create your views here.
 def homepage(request):
