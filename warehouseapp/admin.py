@@ -7,7 +7,7 @@ class ProductAdmin(admin.ModelAdmin):
 	list_display = ['name', 'price', 'quantity']
 
 class TransactionAdmin(admin.ModelAdmin):
-	list_display = ['product', 'operation','timestamp','object_id']
+	list_display = ['product', 'operation','timestamp','object_id', 'remarks']
 	list_filter = ('product','timestamp',)
 
 admin.site.register(Product, ProductAdmin)

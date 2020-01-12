@@ -26,6 +26,7 @@ SECRET_KEY = 'bfvubfdvbsvsdvlksdvls551646vbsdjvb'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+LOGIN_REDIRECT_URL = 'homepage'
 
 
 # Application definition

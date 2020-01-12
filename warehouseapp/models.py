@@ -18,6 +18,7 @@ class Transaction(models.Model):
 	]
 	operation = models.IntegerField(choices=operation_choice)
 	product = models.ForeignKey(Product, on_delete = models.CASCADE)
+	remarks = models.CharField(max_length=1000, blank=True, null=True)
 	timestamp = models.DateTimeField(auto_now=True)
 
 	

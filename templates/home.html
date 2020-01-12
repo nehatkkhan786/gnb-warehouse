@@ -26,8 +26,9 @@
         -->
           <div class="toolbar">
             <!-- <button id="alertBtn" class="btn btn-default">Alert</button> -->
-            <a class="btn btn-default" href="/admin">Admin</a>
+            <a class="btn btn-default" href="/admin/gnb/">Admin</a>
             <a  type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-default" data-whatever="@mdo" >Add Product</a>
+            <a class="btn btn-default" href="/admin/gnb/">Transactions</a>
           </div>
 
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -83,7 +84,7 @@
                 <td>{{product.id}}</td>
                 <td>{{product.name}}</td>
                 <td>Rs.{{product.price}}</td>
-                <td id="product_quantity">{{product.quantity}}cs</td>
+                <td id="product_quantity{{product.id}}">{{product.quantity}}cs</td>
                 <td>
                   
             <form action="{% url 'warehouse:add_quantity' product.id %}" method="POST" id="form_add{{product.id}}">
@@ -100,6 +101,53 @@
               </form>
                 </td>
               </tr>
+
+
+                <script type="text/javascript">
+            $("#form_add")
+            $(document).on('submit', '#form_add{{product.id}}', function(e){
+              e.preventDefault();
+              $.ajax({
+                type:'POST',
+                url :$(this).attr('action'), 
+                data : {
+                  quantity:$('#quantity{{product.id}}').val(),
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  action:'post',
+
+                },
+                success: function(data){
+                  $('#quantity{{product.id}}').val('');
+                  console.log(data.quantity)
+                  //$('#product_quantity').val(data.quantity)
+                  //$('#product_quantity{{product.id}}').fadeIn(1000).fadeOut(1000);
+                  $('#product_quantity{{product.id}}').text(data.quantity);
+                    } 
+
+                  });
+            });
+
+            $(document).on('submit', '#form_delete{{product.id}}', function(e){
+              e.preventDefault();
+              $.ajax({
+                type:'POST',
+                url: $(this).attr('action'),
+                data : {
+                  quantity:$('#delete_quantity{{product.id}}').val(),
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                  action:'post',
+
+                },
+                success: function(data){
+                  $('#delete_quantity{{product.id}}').val('');
+                  console.log(data.quantity);
+                  //$('#product_quantity{{product.id}}').fadeIn(1000).fadeOut(1000);
+                  $('#product_quantity{{product.id}}').text(data.quantity);
+                  
+                }
+              });    
+            });
+            </script>
               {% endfor %}
             </tbody>
           </table>
@@ -153,46 +201,46 @@
 
 <script type="text/javascript">
 
-$(document).on('submit', '#form_add{{product.id}}', function(e){
-  e.preventDefault();
-  $.ajax({
-    type:'POST',
-    url :$(this).attr('action'), 
-    data : {
-      quantity:$('#quantity{{product.id}}').val(),
-      csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-      action:'post',
+// $(document).on('submit', '#form_add{{product.id}}', function(e){
+//   e.preventDefault();
+//   $.ajax({
+//     type:'POST',
+//     url :$(this).attr('action'), 
+//     data : {
+//       quantity:$('#quantity{{product.id}}').val(),
+//       csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+//       action:'post',
 
-    },
-    success: function(data){
-      $('#quantity{{product.id}}').val('');
-      console.log(data.quantity)
-      // $('#product_quantity').val(data.quantity)
-       $('#product_quantity').text(data.quantity);
-    } 
+//     },
+//     success: function(data){
+//       $('#quantity{{product.id}}').val('');
+//       console.log(data.quantity)
+//       // $('#product_quantity').val(data.quantity)
+//        $('#product_quantity').text(data.quantity);
+//     } 
 
-  });
-});
+//   });
+// });
 
-$(document).on('submit', '#form_delete{{product.id}}', function(e){
-      e.preventDefault();
-      $.ajax({
-        type:'POST',
-        url: $(this).attr('action'),
-        data : {
-          quantity:$('#delete_quantity{{product.id}}').val(),
-          //quantity:$(this).querySelector('#delete_quantity').val(),
-          csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-          action:'post',
+// $(document).on('submit', '#form_delete{{product.id}}', function(e){
+//       e.preventDefault();
+//       $.ajax({
+//         type:'POST',
+//         url: $(this).attr('action'),
+//         data : {
+//           quantity:$('#delete_quantity{{product.id}}').val(),
+//           //quantity:$(this).querySelector('#delete_quantity').val(),
+//           csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+//           action:'post',
 
-        },
-        success: function(data){
-          $('#delete_quantity{{product.id}}').val('');
-          console.log(data.quantity);
-          $('#product_quantity').text(data.quantity);
-        }
-      });    
-  });
+//         },
+//         success: function(data){
+//           $('#delete_quantity{{product.id}}').val('');
+//           console.log(data.quantity);
+//           $('#product_quantity').text(data.quantity);
+//         }
+//       });    
+//   });
 </script>
 
 
